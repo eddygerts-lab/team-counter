@@ -4,111 +4,31 @@
   <meta charset="UTF-8">
   <title>Счётчик команды</title>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      max-width: 720px;
-      margin: 20px auto;
-      padding: 20px;
-      background: #fff;
-    }
-    #mainTitle {
-      text-align: center;
-      font-size: 2.2em;
-      font-weight: 700;
-      color: #2c3e50;
-      margin-bottom: 8px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    }
-    #currentDate {
-      text-align: center;
-      font-size: 1.1em;
-      color: #7f8c8d;
-      margin-bottom: 25px;
-    }
-    .btn-reset {
-      display: block;
-      width: 100%;
-      padding: 14px;
-      background: #e74c3c;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 1.1em;
-      margin: 25px 0;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      transition: background 0.2s;
-    }
-    .btn-reset:hover {
-      background: #c0392b;
-    }
-    .item {
-      display: flex;
-      align-items: center;
-      padding: 14px;
-      border: 1px solid #e0e0e0;
-      margin: 10px 0;
-      border-radius: 10px;
-      background: #f9f9f9;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-    .btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 20px;
-      user-select: none;
-    }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 720px; margin: 20px auto; padding: 20px; background: #fff; }
+    #mainTitle { text-align: center; font-size: 2.2em; font-weight: 700; color: #2c3e50; margin-bottom: 8px; text-shadow: 0 1px 2px rgba(0,0,0,0.1);}
+    #currentDate { text-align: center; font-size: 1.1em; color: #7f8c8d; margin-bottom: 25px; }
+    .btn-reset { display: block; width: 100%; padding: 14px; background: #e74c3c; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.1em; margin: 25px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: background 0.2s; }
+    .btn-reset:hover { background: #c0392b; }
+    .item { display: flex; align-items: center; padding: 14px; border: 1px solid #e0e0e0; margin: 10px 0; border-radius: 10px; background: #f9f9f9; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .btn { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; font-size: 20px; user-select: none; }
     .minus { background: #f5f5dc; color: #555; }
     .plus { background: #d5f5d5; color: #27ae60; }
     .title { flex-grow: 1; text-align: center; }
     .count { font-size: 1.3em; font-weight: bold; color: #2c3e50; }
-    .section-title {
-      font-weight: bold;
-      margin: 30px 0 12px 0;
-      color: #2c3e50;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 6px;
-      font-size: 1.2em;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      font-size: 0.95em;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 10px 12px;
-      text-align: left;
-    }
-    th {
-      background: #f5f7fa;
-      color: #34495e;
-      font-weight: 600;
-    }
-    tr:nth-child(even) {
-      background: #fcfcfc;
-    }
-    .history-table td {
-      font-family: monospace;
-    }
+    .section-title { font-weight: bold; margin: 30px 0 12px 0; color: #2c3e50; border-bottom: 1px solid #eee; padding-bottom: 6px; font-size: 1.2em; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.95em; }
+    th, td { border: 1px solid #ddd; padding: 10px 12px; text-align: left; }
+    th { background: #f5f7fa; color: #34495e; font-weight: 600; }
+    tr:nth-child(even) { background: #fcfcfc; }
+    .history-table td { font-family: monospace; }
   </style>
 </head>
 <body>
 
 <div id="mainTitle">Мы тут работаем</div>
 <div id="currentDate"></div>
-
 <div id="listClaims"></div>
 <div id="listBlocks"></div>
-
 <button class="btn-reset" onclick="resetAll()">Обнулить всё</button>
 
 <div class="section-title">📋 История изменений</div>
@@ -124,57 +44,35 @@
   <tbody id="historyBody"></tbody>
 </table>
 
-<!-- Firebase SDK -->
+<!-- Firebase SDK (compat) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-
 <script>
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBb0uemCwfr3LpSjqCfbrPzgXMxqJo8ub0",
-  authDomain: "rocketteam-counter.firebaseapp.com",
-  databaseURL: "https://rocketteam-counter-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "rocketteam-counter",
-  storageBucket: "rocketteam-counter.firebasestorage.app",
-  messagingSenderId: "882235505564",
-  appId: "1:882235505564:web:01dbef24064b0fed5a2659",
-  measurementId: "G-RN86EZF81C"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+  // Firebase config
   const firebaseConfig = {
-    apiKey: "AIzaSyBb0uemCwfr3LpSjqCfbrPzgXMxqJo8ub0",
-    authDomain: "rocketteam-counter.firebaseapp.com",
-    databaseURL: "https://rocketteam-counter-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "rocketteam-counter",
-    storageBucket: "rocketteam-counter.firebasestorage.app",
-    messagingSenderId: "882235505564",
-    appId: "1:882235505564:web:01dbef24064b0fed5a2659"
+      apiKey: "AIzaSyBb0uemCwfr3LpSjqCfbrPzgXMxqJo8ub0",
+      authDomain: "rocketteam-counter.firebaseapp.com",
+      databaseURL: "https://rocketteam-counter-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "rocketteam-counter",
+      storageBucket: "rocketteam-counter.firebasestorage.app",
+      messagingSenderId: "882235505564",
+      appId: "1:882235505564:web:01dbef24064b0fed5a2659"
   };
 
-  // Инициализация
+  // Init Firebase (compat)
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
   const countersRef = db.ref('counters');
   const historyRef = db.ref('history');
 
-  // Установка даты
+  // Set date
   document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ru-RU', {
     day: 'numeric', month: 'long', year: 'numeric'
   });
 
   let data = [];
 
-  // 🔄 Слушаем счётчики
+  // Counter listener
   countersRef.on('value', (snapshot) => {
     const val = snapshot.val();
     if (val) {
@@ -183,11 +81,11 @@ const analytics = getAnalytics(app);
       }));
       renderCounters();
     } else {
-      initDefaultData(); // Создаём начальные данные
+      initDefaultData();
     }
   });
 
-  // 🔄 Слушаем историю
+  // History listener
   historyRef.limitToLast(50).on('value', (snapshot) => {
     const val = snapshot.val();
     if (val) {
@@ -213,10 +111,7 @@ const analytics = getAnalytics(app);
       updates[key] = item;
     });
     countersRef.set(updates)
-      .then(() => {
-        // После успешной записи — перезагружаем данные
-        return countersRef.once('value');
-      })
+      .then(() => countersRef.once('value'))
       .then(snapshot => {
         const val = snapshot.val();
         data = Object.keys(val).map(key => ({
@@ -224,15 +119,12 @@ const analytics = getAnalytics(app);
         }));
         renderCounters();
       })
-      .catch(error => {
-        console.error("Ошибка инициализации:", error);
-      });
+      .catch(error => { console.error("Ошибка инициализации:", error); });
   }
 
   function getKey(name, type) {
     return name + '_' + type.replace(/\s+/g, '_');
   }
-
   function getStep(type) {
     return type === "Блокировки" ? 2 : 1;
   }
@@ -244,7 +136,6 @@ const analytics = getAnalytics(app);
     const newCount = Math.max(0, item.count + delta);
     countersRef.child(getKey(name, type) + '/count').set(newCount);
 
-    // Логируем в историю
     historyRef.push({
       time: new Date().toLocaleString('ru-RU', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'long' }),
       type,
@@ -263,10 +154,7 @@ const analytics = getAnalytics(app);
       if (item.type === "Блокировки") totalBlocks += item.count;
     });
     countersRef.update(updates)
-      .then(() => {
-        // После сброса — перезагружаем данные
-        return countersRef.once('value');
-      })
+      .then(() => countersRef.once('value'))
       .then(snapshot => {
         const val = snapshot.val();
         data = Object.keys(val).map(key => ({
@@ -274,9 +162,7 @@ const analytics = getAnalytics(app);
         }));
         renderCounters();
       })
-      .catch(error => {
-        console.error("Ошибка сброса:", error);
-      });
+      .catch(error => { console.error("Ошибка сброса:", error); });
 
     historyRef.push({
       time: new Date().toLocaleString('ru-RU', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'long' }),
@@ -330,6 +216,5 @@ const analytics = getAnalytics(app);
     }
   }
 </script>
-
 </body>
 </html>
