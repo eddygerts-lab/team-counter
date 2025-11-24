@@ -1,67 +1,121 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>Мы тут работаем 🚀</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      max-width: 760px;
-      margin: 20px auto;
-      padding: 20px;
-      background: #fff;
-      transition: background 0.3s, color 0.3s;
-    }
-    body.dark { background: #222; color: #eee; }
-    .toggle-theme { float:right; margin-bottom:10px; }
-    #mainTitle { text-align: center; font-size: 2.2em; font-weight: 700; margin-bottom: 8px;}
-    #currentDate { text-align: center; font-size: 1.1em; margin-bottom: 25px;}
-    .btn-reset { display: block; width: 100%; padding: 14px; background: #e74c3c; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.1em; margin: 25px 0;}
-    .item { display: flex; align-items: center; padding: 14px; border: 1px solid #e0e0e0; margin: 10px 0; border-radius: 10px; background: #f9f9f9;}
-    .btn { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; font-size: 20px; user-select: none;}
-    .minus { background: #f5f5dc; color: #555; }
-    .plus { background: #d5f5d5; color: #27ae60; }
-    .title { flex-grow: 1; text-align: center;}
-    .count { font-size: 1.3em; font-weight: bold;}
-    .section-title { font-weight: bold; margin: 30px 0 12px 0; border-bottom: 1px solid #eee; padding-bottom: 6px; font-size: 1.2em;}
-    .search { margin-bottom: 12px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px;}
-    th, td { border: 1px solid #ddd; padding: 10px 12px; text-align: left;}
-    th { background: #f5f7fa; font-weight: 600;}
-    tr:nth-child(even) { background: #fcfcfc; }
-    .history-table td { font-family: monospace; }
-    .btn-export { margin-bottom: 10px; }
-    .lunch-timers {margin-bottom:20px;}
-    .lunch-item {display:flex; align-items:center; margin-bottom:6px;}
-    .timer-btn {margin-left:18px; padding:4px 18px; border-radius:6px; border:1px solid #ccc; background:#d5f5d5; font-weight:bold; cursor:pointer;}
-    .timer-display { margin-left:15px; font-family:monospace; min-width:90px; display:inline-block;}
-    body.dark .item, body.dark table, body.dark th, body.dark td {background:#333; color:#eee; border-color:#444;}
-    body.dark th {background:#444;}
-    body.dark .btn-export, body.dark .timer-btn {background:#444; color:#eee;}
-    body.dark .btn-reset {background:#c0392b;}
-  </style>
 </head>
 <body>
 <button class="toggle-theme" onclick="toggleTheme()">🌚/🌞</button>
 <div id="mainTitle">rocketteam</div>
 <div id="currentDate"></div>
+  <meta charset="UTF-8" />
+  <title>Счётчик с Firebase</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 720px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+    }
+    #mainTitle {
+      text-align: center;
+      font-size: 2.2em;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 8px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    #currentDate {
+      text-align: center;
+      font-size: 1.1em;
+      color: #7f8c8d;
+      margin-bottom: 25px;
+    }
+    .btn-reset {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1.1em;
+      margin: 25px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: background 0.2s;
+    }
+    .btn-reset:hover {
+      background: #c0392b;
+    }
+    .item {
+      display: flex;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid #e0e0e0;
+      margin: 10px 0;
+      border-radius: 10px;
+      background: #f9f9f9;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 20px;
+      user-select: none;
+    }
+    .minus { background: #f5f5dc; color: #555; }
+    .plus { background: #d5f5d5; color: #27ae60; }
+    .title { flex-grow: 1; text-align: center; }
+    .count { font-size: 1.3em; font-weight: bold; color: #2c3e50; }
+    .section-title {
+      font-weight: bold;
+      margin: 30px 0 12px 0;
+      color: #2c3e50;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 6px;
+      font-size: 1.2em;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.95em;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px 12px;
+      text-align: left;
+    }
+    th {
+      background: #f5f7fa;
+      color: #34495e;
+      font-weight: 600;
+    }
+    tr:nth-child(even) {
+      background: #fcfcfc;
+    }
+    .history-table td {
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
 
-<!-- Таймер "Обед" -->
-<div class="section-title">🍽️ Обед — 60 минут</div>
-<div class="lunch-timers">
-  <div class="lunch-item">Бочкарев <span id="timer-bock"></span> <button class="timer-btn" onclick="startLunch('bock')">Старт</button></div>
-  <div class="lunch-item">Герц <span id="timer-gertz"></span> <button class="timer-btn" onclick="startLunch('gertz')">Старт</button></div>
-  <div class="lunch-item">Согаева <span id="timer-sogaeva"></span> <button class="timer-btn" onclick="startLunch('sogaeva')">Старт</button></div>
-</div>
+<div id="mainTitle">Мы тут работаем 🚀</div>
+<div id="currentDate"></div>
 
 <div id="listClaims"></div>
 <div id="listBlocks"></div>
+
 <button class="btn-reset" onclick="resetAll()">Обнулить всё</button>
 
 <div class="section-title">📋 История изменений</div>
-<input type="text" placeholder="Поиск по истории..." class="search" id="historySearch" oninput="renderHistory()" />
-<button class="btn-export" onclick="exportHistoryCSV()">Экспорт в CSV</button>
-
 <table class="history-table">
   <thead>
     <tr>
@@ -74,107 +128,154 @@
   <tbody id="historyBody"></tbody>
 </table>
 
+<!-- Firebase SDK (compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
 <script>
-  document.getElementById('mainTitle').textContent = 'rocketteam';
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyBb0uemCwfr3LpSjqCfbrPzgXMxqJo8ub0",
+    authDomain: "rocketteam-counter.firebaseapp.com",
+    databaseURL: "https://rocketteam-counter-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "rocketteam-counter",
+    storageBucket: "rocketteam-counter.firebasestorage.app",
+    messagingSenderId: "882235505564",
+    appId: "1:882235505564:web:01dbef24064b0fed5a2659"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const countersRef = db.ref('counters');
+  const historyRef = db.ref('history');
+
   document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ru-RU', {
-    day: 'numeric', month: 'long', year: 'numeric'
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
   });
 
-  let data = [
-    { name: "Бочкарев", type: "Заявки", count: 3 },
-    { name: "Герц", type: "Заявки", count: 3 },
-    { name: "Согаева", type: "Заявки", count: 3 },
-    { name: "Бочкарев", type: "Блокировки", count: 2 },
-    { name: "Герц", type: "Блокировки", count: 2 },
-    { name: "Согаева", type: "Блокировки", count: 2 },
-  ];
+  let data = [];
 
-  let history = JSON.parse(localStorage.getItem('counterHistory')) || [];
-
-  function getStep(type) { return type === "Блокировки" ? 2 : 1; }
-
-  function resetAll() {
-    if (confirm("Обнулить все счётчики?")) {
-      let totalClaims = 0;
-      let totalBlocks = 0;
-      data.forEach(item => {
-        if (item.count > 0) {
-          if (item.type === "Заявки") totalClaims += item.count;
-          if (item.type === "Блокировки") totalBlocks += item.count;
-          item.count = 0;
-        }
-      });
-      logEvent("Система", "", 0, `Обнуление: заявки -${totalClaims}, блокировки -${totalBlocks}`);
+  // Listen for counters changes
+  countersRef.on('value', snapshot => {
+    const val = snapshot.val();
+    if (val) {
+      data = Object.keys(val).map(key => ({
+        key,
+        name: val[key].name,
+        type: val[key].type,
+        count: val[key].count || 0
+      }));
       renderCounters();
+    } else {
+      initDefaultData();
     }
+  });
+
+  // Listen for history changes (last 50)
+  historyRef.limitToLast(50).on('value', snapshot => {
+    const val = snapshot.val();
+    const history = val ? Object.values(val).reverse() : [];
+    renderHistory(history);
+  });
+
+  function initDefaultData() {
+    const defaults = [
+      { name: "Бочкарев", type: "Заявки", count: 3 },
+      { name: "Герц", type: "Заявки", count: 3 },
+      { name: "Согаева", type: "Заявки", count: 3 },
+      { name: "Бочкарев", type: "Блокировки", count: 2 },
+      { name: "Герц", type: "Блокировки", count: 2 },
+      { name: "Согаева", type: "Блокировки", count: 2 }
+    ];
+    const updates = {};
+    defaults.forEach(item => {
+      const key = getKey(item.name, item.type);
+      updates[key] = item;
+    });
+    countersRef.set(updates).catch(console.error);
+  }
+
+  function getKey(name, type) {
+    return name + '_' + type.replace(/\s+/g, '_');
+  }
+
+  function getStep(type) {
+    return type === "Блокировки" ? 2 : 1;
   }
 
   function changeCount(name, type, sign) {
     const item = data.find(i => i.name === name && i.type === type);
-    if (item) {
-      const step = getStep(type);
-      const delta = sign * step;
-      item.count += delta;
-      if (item.count < 0) item.count = 0;
-      logEvent(type, name, delta);
-      renderCounters();
-    }
-  }
+    if (!item) return;
+    const delta = sign * getStep(type);
+    const newCount = Math.max(0, item.count + delta);
+    countersRef.child(getKey(name, type) + '/count').set(newCount);
 
-  function logEvent(type, name = '', delta = 0, description = '') {
-    const now = new Date();
-    const entry = {
-      display: `${now.toLocaleDateString('ru-RU',{day:'numeric',month:'long'})}, ${now.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}`,
-      fullTimestamp: now.toISOString(),
+    historyRef.push({
+      time: new Date().toLocaleString('ru-RU', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'long' }),
       type,
       name,
-      delta,
-      description
-    };
-    history.unshift(entry);
-    if (history.length > 200) history = history.slice(0, 200);
-    localStorage.setItem('counterHistory', JSON.stringify(history));
-    renderHistory();
+      delta
+    });
+  }
+
+  function resetAll() {
+    if (!confirm("Обнулить все счётчики?")) return;
+    const updates = {};
+    let totalClaims = 0, totalBlocks = 0;
+    data.forEach(item => {
+      updates[getKey(item.name, item.type) + '/count'] = 0;
+      if (item.type === "Заявки") totalClaims += item.count;
+      if (item.type === "Блокировки") totalBlocks += item.count;
+    });
+    countersRef.update(updates).catch(console.error);
+
+    historyRef.push({
+      time: new Date().toLocaleString('ru-RU', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'long' }),
+      type: "Система",
+      name: "",
+      delta: 0,
+      description: `Обнуление: заявки -${totalClaims}, блокировки -${totalBlocks}`
+    });
   }
 
   function renderCounters() {
     const claims = data.filter(i => i.type === "Заявки");
     const blocks = data.filter(i => i.type === "Блокировки");
+
     const renderList = (items, containerId) => {
       const container = document.getElementById(containerId);
       container.innerHTML = '';
       items.forEach(item => {
-        const minusClick = `changeCount('${item.name}', '${item.type}', -1)`;
-        const plusClick = `changeCount('${item.name}', '${item.type}', 1)`;
         const div = document.createElement('div');
         div.className = 'item';
         div.innerHTML = `
-          <div class="btn minus" onclick="${minusClick}">–</div>
+          <div class="btn minus" onclick="changeCount('${item.name}', '${item.type}', -1)">–</div>
           <div class="title"><strong>${item.type} ${item.name}</strong><br><span class="count">${item.count}</span></div>
-          <div class="btn plus" onclick="${plusClick}">+</div>
+          <div class="btn plus" onclick="changeCount('${item.name}', '${item.type}', 1)">+</div>
         `;
         container.appendChild(div);
       });
     };
+
     renderList(claims, 'listClaims');
     renderList(blocks, 'listBlocks');
   }
 
-  function renderHistory() {
+  function renderHistory(history) {
     const tbody = document.getElementById('historyBody');
     tbody.innerHTML = '';
-    let q = (document.getElementById('historySearch')?.value || '').trim().toLowerCase();
-    const recent = history.slice(0, 50).filter(entry => 
-      !q || [entry.type, entry.name, entry.display, entry.description, entry.delta].some(v => (v + '').toLowerCase().includes(q))
-    );
-    if (recent.length === 0) {
+
+    if (history.length === 0) {
       tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">История пуста</td></tr>';
     } else {
-      recent.forEach(entry => {
+      history.forEach(entry => {
         const changeText = entry.description || (entry.delta > 0 ? '+' : '') + entry.delta;
         tbody.innerHTML += `
           <tr>
-            <td>${entry.display}</td>
+            <td>${entry.time}</td>
             <td>${entry.type}</td>
             <td>${entry.name}</td>
             <td>${changeText}</td>
@@ -183,55 +284,7 @@
       });
     }
   }
-
-  function exportHistoryCSV() {
-    let csv = 'Дата и время,Тип,Имя,Изменение\n';
-    history.slice(0, 50).forEach(entry => {
-      const changeText = entry.description || (entry.delta > 0 ? '+' : '') + entry.delta;
-      csv += `"${entry.display}","${entry.type}","${entry.name}","${changeText}"\n`;
-    });
-    const blob = new Blob([csv], {type:'text/csv'});
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'history.csv';
-    link.click();
-  }
-
-  // Тёмная тема
-  function toggleTheme() {
-    document.body.classList.toggle('dark');
-    localStorage.setItem("theme", document.body.classList.contains('dark') ? 'dark' : '');
-  }
-  if(localStorage.getItem("theme") === 'dark') document.body.classList.add('dark');
-
-  // ------------------------------------------
-  // Таймеры обеда (на 60 минут)
-  // ------------------------------------------
-
-  let lunchState = JSON.parse(localStorage.getItem('lunchTimers')) || {};
-  function startLunch(person) {
-    lunchState[person] = Date.now();
-    localStorage.setItem('lunchTimers', JSON.stringify(lunchState));
-    updateLunchTimers();
-  }
-
-  function updateLunchTimers() {
-    ['bock','gertz','sogaeva'].forEach(person => {
-      const el = document.getElementById('timer-' + person);
-      if(!lunchState[person]) { el.textContent = ''; return;}
-      let msLeft = 60*60*1000 - (Date.now() - lunchState[person]);
-      if (msLeft <= 0) { el.textContent = 'обед окончен'; lunchState[person]=null; localStorage.setItem('lunchTimers', JSON.stringify(lunchState)); return;}
-      let min = Math.floor(msLeft/60000);
-      let sec = Math.floor((msLeft%60000)/1000);
-      el.textContent = 'осталось: ' + min + ' мин ' + sec + ' сек';
-    });
-  }
-
-  setInterval(updateLunchTimers, 1000);
-
-  renderCounters();
-  renderHistory();
-  updateLunchTimers();
 </script>
+
 </body>
 </html>
