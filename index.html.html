@@ -1,0 +1,88 @@
+<script>
+  // 
+  const API_URL = "https://script.google.com/macros/s/AKfycbz-5L8d6a2hc5wis7jitSgNhJdTIYUmdq4SFRvVVOBkhg7bjcTHt6G8xN1hlVqNDRi3Vw/exec";
+
+  // Заголовок и дата
+  function getHeaderDate() {
+    return new Date().toLocaleDateString('ru-RU', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  }
+  document.getElementById('mainTitle').textContent = 'Мы тут работаем';
+  document.getElementById('currentDate').textContent = getHeaderDate();
+
+  let data = [];
+
+  // Получить данные с сервера
+  async function fetchData() {
+    try {
+      const res = await fetch(API_URL + "?action=getData");
+      data = await res.json();
+      renderCounters();
+    } catch (e) {
+      console.error("Ошибка загрузки:", e);
+      document.getElementById('currentDate').textContent += " ⚠️ Оффлайн";
+    }
+  }
+
+  // Шаг изменения
+  function getStep(type) {
+    return type === "Блокировки" ? 2 : 1;
+  }
+
+  // Изменить счётчик
+  async function changeCount(name, type, sign) {
+    const step = getStep(type);
+    const delta = sign * step;
+    
+    try {
+      const url = `${API_URL}?action=update&name=${encodeURIComponent(name)}&type=${encodeURIComponent(type)}&delta=${delta}`;
+      const res = await fetch(url);
+      data = await res.json();
+      renderCounters();
+    } catch (e) {
+      alert("Ошибка сохранения. Проверьте интернет.");
+    }
+  }
+
+  // Обнулить всё
+  async function resetAll() {
+    if (!confirm("Обнулить все счётчики?")) return;
+    try {
+      const res = await fetch(API_URL + "?action=reset");
+      data = await res.json();
+      renderCounters();
+    } catch (e) {
+      alert("Ошибка сброса.");
+    }
+  }
+
+  // Рендер
+  function renderCounters() {
+    const claims = data.filter(i => i.type === "Заявки");
+    const blocks = data.filter(i => i.type === "Блокировки");
+
+    const renderList = (items, containerId) => {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <div class="btn minus" onclick="changeCount('${item.name}', '${item.type}', -1)">–</div>
+          <div class="title"><strong>${item.type} ${item.name}</strong><br><span class="count">${item.count}</span></div>
+          <div class="btn plus" onclick="changeCount('${item.name}', '${item.type}', 1)">+</div>
+        `;
+        container.appendChild(div);
+      });
+    };
+
+    renderList(claims, 'listClaims');
+    renderList(blocks, 'listBlocks');
+  }
+
+  // Загрузка при старте
+  fetchData();
+</script>
