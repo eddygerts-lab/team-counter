@@ -100,7 +100,13 @@
     .dark .btn-reset { background: #a9312b; }
     .dark .btn-reset:hover { background: #8c271f; }
 
-    /* Счётчики */
+    /* Счётчики — обёртка */
+    .counter-section {
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    /* Элементы счётчиков */
     .item {
       display: flex;
       align-items: center;
@@ -245,8 +251,11 @@
         <button class="toggle-theme" onclick="toggleTheme()">🚀</button>
       </div>
 
-      <div id="listClaims"></div>
-      <div id="listBlocks"></div>
+      <!-- Счётчики в обёртке с фиксированной шириной -->
+      <div class="counter-section">
+        <div id="listClaims"></div>
+        <div id="listBlocks"></div>
+      </div>
 
       <button class="btn-reset" onclick="resetAll()">Обнулить всё</button>
 
@@ -370,14 +379,20 @@
       });
     }
 
-    function logHistory(type, name, delta = 0, description = '') {
-      const time = new Date().toLocaleString('ru-RU', {
+    // Формат времени без "в"
+    function formatTimeForHistory(date) {
+      return new Intl.DateTimeFormat('ru-RU', {
         timeZone: 'Europe/Moscow',
-        hour: '2-digit',
-        minute: '2-digit',
         day: 'numeric',
-        month: 'long'
-      });
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }).format(date).replace(/г\.,?/g, '').trim();
+    }
+
+    function logHistory(type, name, delta = 0, description = '') {
+      const time = formatTimeForHistory(new Date());
       historyRef.push({ time, type, name, delta, description });
     }
 
