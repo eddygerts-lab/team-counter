@@ -1,142 +1,86 @@
-<!-- Подключение Firebase (только compat) -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Счётчик команды</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 720px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+    }
+    #mainTitle {
+      text-align: center;
+      font-size: 2.2em;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+    #currentDate {
+      text-align: center;
+      font-size: 1.1em;
+      color: #7f8c8d;
+      margin-bottom: 25px;
+    }
+    .btn-reset {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 25px 0;
+    }
+    .item {
+      display: flex;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid #e0e0e0;
+      margin: 10px 0;
+      border-radius: 10px;
+      background: #f9f9f9;
+    }
+    .btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .minus { background: #f5f5dc; color: #555; }
+    .plus { background: #d5f5d5; color: #27ae60; }
+    .title { flex-grow: 1; text-align: center; }
+    .count { font-size: 1.3em; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<div id="mainTitle">Мы тут работаем</div>
+<div id="currentDate"></div>
+
+<div id="listClaims"></div>
+<div id="listBlocks"></div>
+
+<button class="btn-reset" onclick="resetAll()">Обнулить всё</button>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 
 <script>
-  // 🔥 ТОЛЬКО ОДИН firebaseConfig — ваш настоящий
+  // 🔥 Ваш реальный firebaseConfig (без дублей!)
   const firebaseConfig = {
     apiKey: "AIzaSyBb0uemCwfr3LpSjqCfbrPzgXMxqJo8ub0",
     authDomain: "rocketteam-counter.firebaseapp.com",
     databaseURL: "https://rocketteam-counter-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "rocketteam-counter",
     storageBucket: "rocketteam-counter.firebasestorage.app",
-    messagingSenderId: "882235505564",
-    appId: "1:882235505564:web:01dbef24064b0fed5a2659",
-    measurementId: "G-RN86EZF81C"
-  };
-
-  // Инициализация (compat-режим — firebase становится глобальным)
-  firebase.initializeApp(firebaseConfig);
-  const database = firebase.database();
-  const countersRef = database.ref('counters');
-  const historyRef = database.ref('history');
-
-  // DOM
-  document.getElementById('mainTitle').textContent = 'Мы тут работаем';
-  document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ru-RU', {
-    day: 'numeric', month: 'long', year: 'numeric'
-  });
-
-  let data = [];
-
-  // Получение данных в реальном времени
-  countersRef.on('value', (snapshot) => {
-    const val = snapshot.val();
-    if (val) {
-      // Firebase хранит объекты, где ключи — это id, а значения — данные
-      data = Object.keys(val).map(key => ({
-        ...val[key],
-        id: key
-      }));
-      renderCounters();
-    } else {
-      // Если данных нет — инициализируем
-      initializeDefaultData();
-    }
-  });
-
-  function getDefaultData() {
-    return [
-      { name: "Бочкарев", type: "Заявки", count: 3 },
-      { name: "Герц", type: "Заявки", count: 3 },
-      { name: "Согаева", type: "Заявки", count: 3 },
-      { name: "Бочкарев", type: "Блокировки", count: 2 },
-      { name: "Герц", type: "Блокировки", count: 2 },
-      { name: "Согаева", type: "Блокировки", count: 2 }
-    ];
-  }
-
-  function initializeDefaultData() {
-    const defaultData = getDefaultData();
-    const updates = {};
-    defaultData.forEach(item => {
-      const key = getKeyByNameType(item.name, item.type);
-      updates[key] = item;
-    });
-    countersRef.set(updates);
-  }
-
-  function getKeyByNameType(name, type) {
-    return name + '_' + type.replace(/\s+/g, '_');
-  }
-
-  function getStep(type) {
-    return type === "Блокировки" ? 2 : 1;
-  }
-
-  function changeCount(name, type, sign) {
-    const item = data.find(i => i.name === name && i.type === type);
-    if (!item) return;
-
-    const step = getStep(type);
-    const delta = sign * step;
-    const newCount = Math.max(0, item.count + delta);
-
-    const key = getKeyByNameType(name, type);
-    countersRef.child(key + '/count').set(newCount);
-
-    historyRef.push({
-      time: new Date().toLocaleString('ru-RU'),
-      type,
-      name,
-      delta
-    });
-  }
-
-  function resetAll() {
-    if (!confirm("Обнулить все счётчики?")) return;
-
-    const updates = {};
-    let totalClaims = 0, totalBlocks = 0;
-
-    data.forEach(item => {
-      const key = getKeyByNameType(item.name, item.type);
-      updates[key + '/count'] = 0;
-      if (item.type === "Заявки") totalClaims += item.count;
-      if (item.type === "Блокировки") totalBlocks += item.count;
-    });
-
-    countersRef.update(updates);
-
-    historyRef.push({
-      time: new Date().toLocaleString('ru-RU'),
-      type: "Система",
-      name: "",
-      delta: 0,
-      description: `Обнуление: заявки -${totalClaims}, блокировки -${totalBlocks}`
-    });
-  }
-
-  function renderCounters() {
-    const claims = data.filter(i => i.type === "Заявки");
-    const blocks = data.filter(i => i.type === "Блокировки");
-
-    const renderList = (items, containerId) => {
-      const container = document.getElementById(containerId);
-      container.innerHTML = '';
-      items.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'item';
-        div.innerHTML = `
-          <div class="btn minus" onclick="changeCount('${item.name}', '${item.type}', -1)">–</div>
-          <div class="title"><strong>${item.type} ${item.name}</strong><br><span class="count">${item.count}</span></div>
-          <div class="btn plus" onclick="changeCount('${item.name}', '${item.type}', 1)">+</div>
-        `;
-        container.appendChild(div);
-      });
-    };
-
-    renderList(claims, 'listClaims');
-    renderList(blocks, 'listBlocks');
-  }
-</script>
+    messagingSenderId: "8822355055
