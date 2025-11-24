@@ -4,299 +4,287 @@
   <meta charset="UTF-8">
   <title>Мы тут Работаем ✈️</title>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #fff;
-      margin: 0; padding: 0;
-    }
-    .flex-layout {
-      display: flex;
-      min-height: 100vh;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .section-left {
-      flex: 1;
-      min-width: 350px;
-      border-right: 1px solid #e0e0e0;
-      padding: 22px 24px 22px 24px;
-      background: #f9f9f9;
-    }
-    .section-right {
-      width: 420px;
-      max-width: 100vw;
-      padding: 22px 18px 22px 18px;
-      background: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      justify-content: flex-start;
-    }
-    #mainTitle {
-      text-align: center;
-      font-size: 2.1em;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-    #currentDate { text-align: center; font-size: 1.05em; margin-bottom: 22px; color:#888; }
-    .section-title { font-weight: bold; margin: 26px 0 10px 0; border-bottom: 1px solid #eee; padding-bottom: 4px; font-size: 1.12em;}
-    .btn-reset { display: block; width: 100%; padding: 12px; background: #e74c3c; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1em; margin: 22px 0;}
-    .btn-reset:hover { background: #c0392b; }
-    .item { display: flex; align-items: center; padding: 12px; border: 1px solid #e0e0e0; margin: 8px 0; border-radius: 10px; background: #fff;}
-    .btn { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; font-size: 19px; user-select: none;}
-    .minus { background: #fde4d8; color: #555; }
-    .plus { background: #d5f5d5; color: #27ae60; }
-    .title { flex-grow: 1; text-align: center;}
-    .count { font-size: 1.14em; font-weight: bold;}
-    .lunch-timers {margin-bottom:18px;}
-    .lunch-item {display:flex; align-items:center; margin-bottom:10px;}
-    .timer-btn {margin-left:17px; padding:4px 20px; border-radius:5px; border:1px solid #ccc; background:#dfe9ff; font-weight:bold; cursor:pointer;}
-    .timer-stop {background:#ffe1e1;}
-    .timer-display { margin-left:17px; font-family:monospace; min-width:110px; display:inline-block;}
-    table { width: 100%; border-collapse: collapse; margin-top: 10px;}
-    th, td { border: 1px solid #ddd; padding: 9px 11px; text-align: left;}
-    th { background: #f5f7fa; font-weight: 600;}
-    tr:nth-child(even) { background: #fcfcfc; }
-    .history-table td { font-family: monospace; }
-    .search { margin-bottom: 11px; width:100%; }
-    .btn-export { margin-bottom: 11px; width:100%; }
-    /* Chat panel */
-    .chat-panel { flex: 1; display: flex; flex-direction: column; height: 100%; }
-    .chat-log {flex:1; border:1px solid #eee; border-radius:6px; background:#f7f7f7; overflow-y:auto; padding:12px; margin-bottom:8px; min-height:220px;}
-    .chat-msg {margin-bottom:10px;}
-    .chat-msg-me {text-align:right;}
-    .chat-msg-user {font-weight:bold;}
-    .chat-inputs { display: flex; gap:8px; }
-    .chat-input { flex: 1; padding:8px; border-radius:6px; border:1px solid #ccc; font-size:1em;}
-    .chat-send-btn { padding:9px 24px; background: #dcefff; color: #222; border: none; border-radius: 6px; cursor: pointer;}
-    .chat-send-btn:hover { background:#b3daff;}
-    @media (max-width: 900px) {
-      .section-left, .section-right {padding:12px;}
-      .flex-layout {flex-direction:column;}
-      .section-right {width:100%;}
-    }
+    body { font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; background:#fff; margin:0; padding:0; }
+    .dark { background:#262b32; color:#e7eaee;}
+    .layout-main { display:flex; min-height:100vh; max-width:1200px; margin:0 auto; }
+    .side-left { flex:0 0 440px; width:440px; background:#f8f9fa; border-right:1px solid #e1e1e1; padding:22px 0 18px 0; min-width:320px;}
+    .center-content { flex:1; padding:26px 32px 18px 32px;}
+    .side-right { width:430px; max-width:99vw; background:#fff; padding:26px 22px 22px 22px; display:flex; flex-direction:column;}
+    #mainTitle { text-align:center; font-size:2em; font-weight:700; margin-bottom:10px;}
+    #currentDate { text-align:center; font-size:1em; margin-bottom:18px; color:#888;}
+    .theme-toggle-box { position:fixed; top:22px; right:32px; z-index:10; }
+    .theme-btn { background:none; border:none; font-size:22px; cursor:pointer; margin:0 5px;}
+    .side-title { font-weight:bold; margin:16px 0 8px 0; border-bottom:1px solid #eee; padding-bottom:3px; font-size:1.11em;}
+    .history-table {width:98%; border-collapse:collapse; margin-top:8px;}
+    th,td {border:1px solid #ddd; padding:8px 10px; text-align:left;}
+    th {background:#f5f7fa; font-weight:600;}
+    tr:nth-child(even){background:#fcfcfc;}
+    .side-left input {margin-bottom:7px; width:98%; padding:7px;}
+    .btn-reset { display:block; width:98%; padding:11px; background:#e74c3c; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold; font-size:1em; margin:25px auto; }
+    .btn-reset:hover {background:#c0392b;}
+    .item { display:flex; align-items:center; padding:12px; border:1px solid #eee; margin:8px 0; border-radius:10px; background:#fff;}
+    .btn { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:bold; font-size:19px;user-select:none;}
+    .minus { background:#fde4d8; color:#555;}
+    .plus { background:#d5f5d5; color:#27ae60;}
+    .title {flex-grow:1; text-align:center;}
+    .count {font-size:1.12em; font-weight:bold;}
+    .side-right .chat-title {font-weight:600; font-size:1.11em; margin-bottom:7px; border-bottom:1px solid #eee; padding-bottom:4px;}
+    .chat-log {flex:1; border:1px solid #eee; border-radius:6px; background:#f7f7f7; overflow-y:auto; padding:10px; margin-bottom:11px; min-height:180px;}
+    .chat-msg {margin-bottom:8px;}
+    .chat-msg-user {font-weight:600;}
+    .chat-inputs {display:flex; gap:7px;}
+    .chat-input {flex:1; padding:8px; border-radius:6px; border:1px solid #ccc; font-size:1em;}
+    .chat-send-btn {padding:8px 22px; background:#dcefff; color:#222; border: none; border-radius:6px; cursor:pointer;}
+    .chat-send-btn:hover {background:#a9dfff;}
+    /* Lunch timers */
+    .lunch-block {padding:14px 0 4px 0;}
+    .lunch-item { display:flex; align-items:center; margin-bottom:10px;}
+    .timer-btn   {margin-left:16px; padding:4px 18px; border-radius:6px; border:1px solid #ccc; background:#dfe9ff; font-weight:bold; cursor:pointer;}
+    .timer-stop  {background:#ffe1e1;}
+    .timer-display { margin-left:16px; font-family:monospace; min-width:112px; display:inline-block;}
+    /* Dark mode */
+    body.dark,.dark .item,.dark table,.dark th,.dark td  {background:#2b323b; color:#e7eaee; border-color:#444;}
+    .dark th{background:#353c46;}
+    .dark .btn-reset{background:#a9312b;}
+    .dark .plus,.dark .minus{background:#353c46;}
+    .dark .timer-btn,.dark .chat-send-btn{background:#353c46; color:#e7eaee;}
+    .dark .history-table tr:nth-child(even){background:#23272f;}
+    @media(max-width:900px){.layout-main{flex-direction:column;}.side-left,.side-right{width:100%;min-width:unset;}}
   </style>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 </head>
 <body>
-<div class="flex-layout">
-<div class="section-left">
-  <div id="mainTitle">Мы тут Работаем ✈️</div>
-  <div id="currentDate"></div>
-  
-  <!-- Таймер "Обед" -->
-  <div class="section-title">🍽️ Обед — 60 минут</div>
-  <div class="lunch-timers">
-    <div class="lunch-item">Бочкарев
-      <span id="timer-bock" class="timer-display"></span>
-      <button class="timer-btn" onclick="startLunch('bock')">Старт</button>
-      <button class="timer-btn timer-stop" onclick="stopLunch('bock')">Стоп</button>
-    </div>
-    <div class="lunch-item">Герц
-      <span id="timer-gertz" class="timer-display"></span>
-      <button class="timer-btn" onclick="startLunch('gertz')">Старт</button>
-      <button class="timer-btn timer-stop" onclick="stopLunch('gertz')">Стоп</button>
-    </div>
-    <div class="lunch-item">Согаева
-      <span id="timer-sogaeva" class="timer-display"></span>
-      <button class="timer-btn" onclick="startLunch('sogaeva')">Старт</button>
-      <button class="timer-btn timer-stop" onclick="stopLunch('sogaeva')">Стоп</button>
-    </div>
-  </div>
-
-  <div id="listClaims"></div>
-  <div id="listBlocks"></div>
-  <button class="btn-reset" onclick="resetAll()">Обнулить всё</button>
-
-  <div class="section-title">📋 История изменений</div>
-  <input type="text" placeholder="Поиск по истории..." class="search" id="historySearch" oninput="renderHistory()" />
-  <button class="btn-export" onclick="exportHistoryCSV()">Экспорт в CSV</button>
-  <table class="history-table">
-    <thead>
-      <tr>
-        <th>Дата и время</th>
-        <th>Тип</th>
-        <th>Имя</th>
-        <th>Изменение</th>
-      </tr>
-    </thead>
-    <tbody id="historyBody"></tbody>
-  </table>
+<div class="theme-toggle-box">
+  <button class="theme-btn" onclick="setTheme('light')">🌞</button>
+  <button class="theme-btn" onclick="setTheme('dark')">🌚</button>
 </div>
-<div class="section-right">
-  <div class="section-title">💬 Чат команды</div>
-  <div class="chat-panel">
+<div class="layout-main">
+  <div class="side-left">
+    <div id="mainTitle">Мы тут Работаем ✈️</div>
+    <div id="currentDate"></div>
+    <div class="side-title">📋 История изменений</div>
+    <input type="text" placeholder="Поиск по истории..." id="historySearch" oninput="renderHistory()" />
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>Дата и время</th>
+          <th>Тип</th>
+          <th>Имя</th>
+          <th>Изменение</th>
+        </tr>
+      </thead>
+      <tbody id="historyBody"></tbody>
+    </table>
+  </div>
+  <div class="center-content">
+    <div class="side-title">Счетчик команды</div>
+    <div id="listClaims"></div>
+    <div id="listBlocks"></div>
+    <button class="btn-reset" onclick="resetAll()">Обнулить всё</button>
+  </div>
+  <div class="side-right">
+    <div class="chat-title">💬 Чат команды</div>
     <div class="chat-log" id="chatLog"></div>
     <form class="chat-inputs" onsubmit="sendChatMsg(event)">
-      <input type="text" class="chat-input" id="chatName" placeholder="Ваше имя" required style="max-width:110px;">
+      <input type="text" class="chat-input" id="chatName" placeholder="Ваше имя" required style="max-width:100px;">
       <input type="text" class="chat-input" id="chatText" placeholder="Сообщение..." required>
       <button class="chat-send-btn">Отправить</button>
     </form>
+    <div class="side-title" style="margin-bottom:7px;">🍽️ Обед — 60 минут</div>
+    <div class="lunch-block">
+      <div class="lunch-item">Бочкарев <span id="timer-bock" class="timer-display"></span>
+        <button class="timer-btn" onclick="startLunch('bock')">Старт</button>
+        <button class="timer-btn timer-stop" onclick="stopLunch('bock')">Стоп</button>
+      </div>
+      <div class="lunch-item">Герц <span id="timer-gertz" class="timer-display"></span>
+        <button class="timer-btn" onclick="startLunch('gertz')">Старт</button>
+        <button class="timer-btn timer-stop" onclick="stopLunch('gertz')">Стоп</button>
+      </div>
+      <div class="lunch-item">Согаева <span id="timer-sogaeva" class="timer-display"></span>
+        <button class="timer-btn" onclick="startLunch('sogaeva')">Старт</button>
+        <button class="timer-btn timer-stop" onclick="stopLunch('sogaeva')">Стоп</button>
+      </div>
+    </div>
   </div>
 </div>
-</div>
 <script>
+  // ---- ТЕМЫ ----
+  function setTheme(mode) {
+    document.body.classList.toggle('dark', mode === 'dark');
+    localStorage.setItem('theme', mode === 'dark' ? 'dark' : 'light');
+  }
+  if(localStorage.getItem('theme')==='dark') document.body.classList.add('dark');
+  
   document.getElementById('mainTitle').textContent = 'Мы тут Работаем ✈️';
-  document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ru-RU', { day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ru-RU', {day:'numeric',month:'long',year:'numeric'});
 
-  let data = [
-    { name: "Бочкарев", type: "Заявки", count: 3 },
-    { name: "Герц", type: "Заявки", count: 3 },
-    { name: "Согаева", type: "Заявки", count: 3 },
-    { name: "Бочкарев", type: "Блокировки", count: 2 },
-    { name: "Герц", type: "Блокировки", count: 2 },
-    { name: "Согаева", type: "Блокировки", count: 2 },
-  ];
-  let history = JSON.parse(localStorage.getItem('counterHistory')) || [];
+  // ---- FIREBASE ----
+  const firebaseConfig = {
+    apiKey: "AIzaSyBb0uemCwfr3LpSjqCfbrPzgXMxqJo8ub0",
+    authDomain: "rocketteam-counter.firebaseapp.com",
+    databaseURL: "https://rocketteam-counter-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "rocketteam-counter",
+    storageBucket: "rocketteam-counter.firebasestorage.app",
+    messagingSenderId: "882235505564",
+    appId: "1:882235505564:web:01dbef24064b0fed5a2659"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const countersRef = db.ref('counters');
+  const historyRef = db.ref('history');
+  const chatRef = db.ref('chat');
+  const lunchRef = db.ref('lunch');
 
-  function getStep(type) { return type === "Блокировки" ? 2 : 1; }
+  // ---- СЧЁТЧИКИ ----
+  let data = [];
+  countersRef.on('value', snapshot => {
+    const val = snapshot.val();
+    if(val){ data = Object.keys(val).map(key => Object.assign({}, val[key], {key})); renderCounters(); }
+    else{ initDefaultData(); }
+  });
 
-  function resetAll() {
-    if (confirm("Обнулить все счётчики?")) {
-      let totalClaims = 0, totalBlocks = 0;
-      data.forEach(item => {
-        if (item.count > 0) {
-          if (item.type === "Заявки") totalClaims += item.count;
-          if (item.type === "Блокировки") totalBlocks += item.count;
-          item.count = 0;
-        }
-      });
-      logEvent("Система", "", 0, `Обнуление: заявки -${totalClaims}, блокировки -${totalBlocks}`);
-      renderCounters();
-    }
+  function initDefaultData() {
+    const defaults = [
+      { name: "Бочкарев", type: "Заявки", count: 3 },
+      { name: "Герц", type: "Заявки", count: 3 },
+      { name: "Согаева", type: "Заявки", count: 3 },
+      { name: "Бочкарев", type: "Блокировки", count: 2 },
+      { name: "Герц", type: "Блокировки", count: 2 },
+      { name: "Согаева", type: "Блокировки", count: 2 }
+    ];
+    const updates = {};
+    defaults.forEach(item => updates[getKey(item.name,item.type)] = item);
+    countersRef.set(updates);
   }
-  function changeCount(name, type, sign) {
-    const item = data.find(i => i.name === name && i.type === type);
-    if (item) {
-      const step = getStep(type);
-      const delta = sign * step;
-      item.count += delta;
-      if (item.count < 0) item.count = 0;
-      logEvent(type, name, delta);
-      renderCounters();
-    }
+  function getKey(name,type){return name+'_'+type.replace(/\s+/g,'_');}
+  function getStep(type){return type==="Блокировки"?2:1;}
+  function changeCount(name,type,sign){
+    const item=data.find(i=>i.name===name && i.type===type);
+    if(!item)return;
+    const delta=sign*getStep(type);
+    const newCount=Math.max(0,item.count+delta);
+    countersRef.child(getKey(name,type)+'/count').set(newCount);
+    historyRef.push({
+      time: new Date().toLocaleString('ru-RU', {hour:'2-digit',minute:'2-digit',day:'numeric',month:'long'}),
+      type, name, delta
+    });
   }
-  function logEvent(type, name = '', delta = 0, description = '') {
-    const now = new Date();
-    const entry = {
-      display: `${now.toLocaleDateString('ru-RU',{day:'numeric',month:'long'})}, ${now.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}`,
-      fullTimestamp: now.toISOString(),
-      type,
-      name,
-      delta,
-      description
-    };
-    history.unshift(entry);
-    if (history.length > 200) history = history.slice(0, 200);
-    localStorage.setItem('counterHistory', JSON.stringify(history));
-    renderHistory();
+
+  function resetAll(){
+    if(!confirm("Обнулить все счётчики?"))return;
+    const updates={}; let totalClaims=0,totalBlocks=0;
+    data.forEach(item=>{
+      updates[getKey(item.name,item.type)+'/count']=0;
+      if(item.type==="Заявки") totalClaims+=item.count;
+      if(item.type==="Блокировки") totalBlocks+=item.count;
+    });
+    countersRef.update(updates).then(()=>{});
+    historyRef.push({
+      time: new Date().toLocaleString('ru-RU', {hour:'2-digit',minute:'2-digit',day:'numeric',month:'long'}),
+      type:"Система", name:"", delta:0,
+      description:`Обнуление: заявки -${totalClaims}, блокировки -${totalBlocks}`
+    });
   }
-  function renderCounters() {
-    const claims = data.filter(i => i.type === "Заявки");
-    const blocks = data.filter(i => i.type === "Блокировки");
-    function renderList(items, containerId) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = '';
-      items.forEach(item => {
-        const minusClick = `changeCount('${item.name}', '${item.type}', -1)`;
-        const plusClick = `changeCount('${item.name}', '${item.type}', 1)`;
-        const div = document.createElement('div');
-        div.className = 'item';
-        div.innerHTML = `
-          <div class="btn minus" onclick="${minusClick}">–</div>
+
+  function renderCounters(){
+    const claims=data.filter(i=>i.type==="Заявки");
+    const blocks=data.filter(i=>i.type==="Блокировки");
+    function renderList(items,containerId){
+      const container=document.getElementById(containerId);
+      container.innerHTML='';
+      items.forEach(item=>{
+        const div=document.createElement('div');
+        div.className='item';
+        div.innerHTML=`
+          <div class="btn minus" onclick="changeCount('${item.name}', '${item.type}', -1)">–</div>
           <div class="title"><strong>${item.type} ${item.name}</strong><br><span class="count">${item.count}</span></div>
-          <div class="btn plus" onclick="${plusClick}">+</div>
+          <div class="btn plus" onclick="changeCount('${item.name}', '${item.type}', 1)">+</div>
         `;
         container.appendChild(div);
       });
     }
-    renderList(claims, 'listClaims');
-    renderList(blocks, 'listBlocks');
+    renderList(claims,'listClaims');
+    renderList(blocks,'listBlocks');
   }
-  function renderHistory() {
+
+  // ---- ИСТОРИЯ ----
+  historyRef.limitToLast(50).on('value', snapshot => {
+    const val = snapshot.val();
+    const history = val ? Object.values(val).reverse() : [];
+    renderHistory(history);
+  });
+
+  function renderHistory(history) {
     const tbody = document.getElementById('historyBody');
     tbody.innerHTML = '';
     let q = (document.getElementById('historySearch')?.value || '').trim().toLowerCase();
-    const recent = history.slice(0, 50).filter(entry =>
-      !q || [entry.type, entry.name, entry.display, entry.description, entry.delta].some(v => (v + '').toLowerCase().includes(q))
+    const shown = !q ? history : history.filter(entry =>
+      [entry.type, entry.name, entry.time, entry.description, entry.delta].some(v => (v + '').toLowerCase().includes(q))
     );
-    if (recent.length === 0) {
+    if(!shown.length){
       tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">История пуста</td></tr>';
-    } else {
-      recent.forEach(entry => {
-        const changeText = entry.description || (entry.delta > 0 ? '+' : '') + entry.delta;
+    }else{
+      shown.forEach(entry=>{
+        const changeText = entry.description || (entry.delta>0?'+':'')+entry.delta;
         tbody.innerHTML += `
           <tr>
-            <td>${entry.display}</td>
-            <td>${entry.type}</td>
-            <td>${entry.name}</td>
+            <td>${entry.time ?? ''}</td>
+            <td>${entry.type ?? ''}</td>
+            <td>${entry.name ?? ''}</td>
             <td>${changeText}</td>
           </tr>
         `;
       });
     }
   }
-  function exportHistoryCSV() {
-    let csv = 'Дата и время,Тип,Имя,Изменение\n';
-    history.slice(0, 50).forEach(entry => {
-      const changeText = entry.description || (entry.delta > 0 ? '+' : '') + entry.delta;
-      csv += `"${entry.display}","${entry.type}","${entry.name}","${changeText}"\n`;
-    });
-    const blob = new Blob([csv], {type:'text/csv'});
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'history.csv';
-    link.click();
-  }
-  // ---------------- Таймеры обеда -------------------
-  let lunchState = JSON.parse(localStorage.getItem('lunchTimers')) || {};
-  function startLunch(person) {
-    lunchState[person] = Date.now();
-    localStorage.setItem('lunchTimers', JSON.stringify(lunchState));
-    updateLunchTimers();
-  }
-  function stopLunch(person) {
-    lunchState[person] = null;
-    localStorage.setItem('lunchTimers', JSON.stringify(lunchState));
-    updateLunchTimers();
-  }
-  function updateLunchTimers() {
-    ['bock','gertz','sogaeva'].forEach(person => {
-      const el = document.getElementById('timer-' + person);
-      if(!lunchState[person]) { el.textContent = ''; return;}
-      let msLeft = 60*60*1000 - (Date.now() - lunchState[person]);
-      if(msLeft <= 0) { el.textContent = 'Обед окончен'; lunchState[person]=null; localStorage.setItem('lunchTimers', JSON.stringify(lunchState)); return;}
-      let min = Math.floor(msLeft/60000);
-      let sec = Math.floor((msLeft%60000)/1000);
-      el.textContent = 'Осталось ' + min + ' мин ' + sec + ' сек';
-    });
-  }
-  setInterval(updateLunchTimers, 1000);
 
-  // -------------- ЧАТ --------------------
-  let chatMessages = JSON.parse(localStorage.getItem('teamChatLog') || "[]");
-  function renderChat() {
-    const log = document.getElementById('chatLog');
-    log.innerHTML = '';
-    chatMessages.slice(-60).forEach(msg => {
-      log.innerHTML += `<div class="chat-msg${msg.me ? ' chat-msg-me' : ''}"><span class="chat-msg-user">${msg.name}:</span> <span>${msg.text}</span></div>`;
-    });
-    log.scrollTop = log.scrollHeight;
-  }
-  function sendChatMsg(e) {
+  // ---- ЧАТ ----
+  chatRef.limitToLast(60).on('value', snapshot=>{
+    const val=snapshot.val(),log=document.getElementById('chatLog');
+    log.innerHTML='';
+    if(val){
+      Object.values(val).forEach(msg=>{
+        log.innerHTML += `<div class="chat-msg${msg.me?' chat-msg-me':''}"><span class="chat-msg-user">${msg.name}:</span> <span>${msg.text}</span></div>`;
+      });
+      log.scrollTop=log.scrollHeight;
+    }
+  });
+  function sendChatMsg(e){
     e.preventDefault();
-    let name = document.getElementById('chatName').value.trim().slice(0,20);
-    let text = document.getElementById('chatText').value.trim().slice(0,100);
-    if(!name || !text) return false;
-    chatMessages.push({ name, text, ts:Date.now(), me:true });
-    localStorage.setItem('teamChatLog', JSON.stringify(chatMessages));
-    document.getElementById('chatText').value = "";
-    renderChat();
+    let name=document.getElementById('chatName').value.trim().slice(0,20);
+    let text=document.getElementById('chatText').value.trim().slice(0,120);
+    if(!name||!text) return false;
+    chatRef.push({ name, text, ts:Date.now(), me:true });
+    document.getElementById('chatText').value="";
     return false;
   }
-  renderCounters();
-  renderHistory();
-  updateLunchTimers();
-  renderChat();
+
+  // ---- ОБЕДЫ ----
+  lunchRef.on('value', snapshot=>{
+    window.lunchState=snapshot.val()||{};
+    updateLunchTimers();
+  });
+
+  function startLunch(person){
+    lunchRef.child(person).set(Date.now());
+  }
+  function stopLunch(person){
+    lunchRef.child(person).set(null);
+  }
+  function updateLunchTimers(){
+    ['bock','gertz','sogaeva'].forEach(person=>{
+      const el=document.getElementById('timer-'+person);
+      const started=window.lunchState?.[person];
+      if(!started){ el.textContent=''; return; }
+      let msLeft=60*60*1000-(Date.now()-started);
+      if(msLeft<=0){ el.textContent='Обед окончен'; lunchRef.child(person).set(null); return;}
+      let min=Math.floor(msLeft/60000),sec=Math.floor((msLeft%60000)/1000);
+      el.textContent='Осталось ' + min + ' мин ' + sec + ' сек';
+    });
+  }
+  setInterval(updateLunchTimers,1000);
 </script>
 </body>
 </html>
