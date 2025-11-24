@@ -55,6 +55,9 @@
     .center-content { 
       flex:1; 
       padding:34px 24px 12px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     #currentDate { 
       text-align: center; 
@@ -162,6 +165,8 @@
       background: #f9f9f9;
       border-radius: 10px;
       border: 1px solid #e1e1e1;
+      width: 100%;
+      max-width: 420px;
     }
     .dark .timers-container {
       background: #2c3139;
@@ -291,6 +296,7 @@
     }
   </style>
 
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 </head>
@@ -303,8 +309,9 @@
     </div>
     <div id="currentDate"></div>
 
-    <div id="listClaims"></div>
-    <div id="listBlocks"></div>
+    <!-- Счетчики — теперь по центру -->
+    <div id="listClaims" style="width: 100%; max-width: 420px;"></div>
+    <div id="listBlocks" style="width: 100%; max-width: 420px;"></div>
 
     <button class="btn-reset" onclick="resetAll()">Обнулить всё</button>
 
@@ -339,7 +346,7 @@
     </div>
 
     <div class="history-title">📋 История изменений</div>
-    <table class="history-table">
+    <table class="history-table" style="width: 100%; max-width: 420px;">
       <thead>
         <tr>
           <th>Дата и время</th>
@@ -354,6 +361,7 @@
 </div>
 
 <script>
+  // === Firebase config (без measurementId) ===
   const firebaseConfig = {
     apiKey: "AIzaSyBb0uemCwfr3LpSjqCfbrPzgXMxqJo8ub0",
     authDomain: "rocketteam-counter.firebaseapp.com",
@@ -375,6 +383,7 @@
   let data = [];
   let lunchState = {};
 
+  // === Тема ===
   function toggleTheme() {
     const isDark = document.body.classList.toggle('dark');
     document.querySelector('.toggle-theme').textContent = isDark ? '🌚' : '🌞';
@@ -388,6 +397,7 @@
     }
   }
 
+  // === Дата ===
   function initDate() {
     document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ru-RU', {
       day: 'numeric',
@@ -396,6 +406,7 @@
     });
   }
 
+  // === Вспомогательные функции ===
   function getKey(name, type) {
     return name + '_' + type.replace(/\s+/g, '_');
   }
@@ -403,6 +414,7 @@
     return type === "Блокировки" ? 2 : 1;
   }
 
+  // === Инициализация данных ===
   function initDefaultData() {
     const defaults = [
       { name: "Бочкарев", type: "Заявки", count: 3 },
@@ -419,12 +431,14 @@
     countersRef.set(updates).catch(console.error);
   }
 
+  // === Счётчики ===
   function changeCount(name, type, sign) {
     const item = data.find(i => i.name === name && i.type === type);
     if (!item) return;
     const delta = sign * getStep(type);
     const newCount = Math.max(0, item.count + delta);
-    countersRef.child(getKey(name, type) + '/count').set(newCount);
+    countersRef.child(getKey(name, type) + '/count').set(newCount)
+      .catch(err => console.error('Ошибка записи счетчика:', err));
     historyRef.push({
       time: new Date().toLocaleString('ru-RU', {
         hour: '2-digit',
@@ -435,7 +449,7 @@
       type,
       name,
       delta
-    });
+    }).catch(err => console.error('Ошибка записи истории:', err));
   }
 
   function resetAll() {
@@ -459,7 +473,7 @@
       name: "",
       delta: 0,
       description: `Обнуление: заявки -${totalClaims}, блокировки -${totalBlocks}`
-    });
+    }).catch(console.error);
   }
 
   function renderCounters() {
@@ -506,6 +520,7 @@
     renderList(blocks, 'listBlocks');
   }
 
+  // === История ===
   function renderHistory(history) {
     const tbody = document.getElementById('historyBody');
     if (!tbody) return;
@@ -527,11 +542,16 @@
     });
   }
 
+  // === Таймеры обеда ===
   function startLunch(person) {
-    lunchRef.child(person).set(Date.now()).catch(console.error);
+    lunchRef.child(person).set(Date.now())
+      .then(() => console.log(`Таймер ${person} запущен`))
+      .catch(err => console.error(`Ошибка запуска таймера ${person}:`, err));
   }
   function stopLunch(person) {
-    lunchRef.child(person).set(null).catch(console.error);
+    lunchRef.child(person).set(null)
+      .then(() => console.log(`Таймер ${person} остановлен`))
+      .catch(err => console.error(`Ошибка остановки таймера ${person}:`, err));
   }
 
   function updateLunchTimers() {
@@ -565,6 +585,7 @@
     });
   }
 
+  // === Инициализация ===
   function initApp() {
     initTheme();
     initDate();
