@@ -4,162 +4,60 @@
   <meta charset="UTF-8" />
   <title>Мы тут работаем 🚀</title>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0; padding: 0;
-      background: #fff;
-      color: #222;
-      transition: background 0.2s, color 0.2s;
-    }
-    body.dark {
-      background: #23272d;
-      color: #eceef1;
-    }
+    body { font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; background:#fff; color:#222; }
+    .dark { background:#23272d; color:#eceef1;}
     .toggle-theme {
-      position: fixed;
-      top: 16px;
-      right: 22px;
-      z-index: 9;
-      font-size: 24px;
-      background: none;
-      border: none;
-      cursor: pointer;
+      position:fixed; top:18px; right:24px; font-size:26px;
+      background: none; border: none; cursor: pointer; z-index:10;
     }
-    #mainTitle {
-      text-align: center;
-      font-size: 2.2em;
-      font-weight: 700;
-      margin-top: 24px;
-      color: #2c3e50;
-      margin-bottom: 8px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    }
-    body.dark #mainTitle {
-      color: #eceef1;
-      text-shadow: none;
-    }
-    #currentDate {
-      text-align: center;
-      font-size: 1.1em;
-      color: #7f8c8d;
-      margin-bottom: 25px;
-    }
-    body.dark #currentDate { color: #b0b3b7;}
-    .layout { display: flex; max-width: 1180px; margin: 0 auto;}
-    .content { flex: 1; padding: 24px;}
-    .rightbar {
-      width: 270px;
-      border-left: 1px solid #e0e0e0;
-      background: #fafaff;
-      padding: 32px 18px;
-    }
-    body.dark .rightbar {
-      background: #23272d;
-      border-color: #40464e;
-    }
-    .timer-box {
-      margin-bottom: 12px;
-      font-size: 1em;
-    }
-    .timer-title {
-      font-weight: bold;
-      padding-bottom: 8px;
-      margin-bottom: 12px;
-      border-bottom: 1px solid #e2e2f2;
-      font-size: 1.09em;
-    }
-    .lunch-item {
-      display: flex; align-items: center; margin-bottom: 13px;
-    }
-    .timer-label { width: 95px;}
-    .timer-display { font-family:monospace; min-width: 88px; }
-    .timer-btn {
-      font-size: 1em;
-      margin-left: 10px;
-      padding: 4px 13px;
-      border-radius: 6px;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn-start {
-      background: #27ae60;
-      color: #fff;
-      border: 1px solid #229b51;
-    }
-    .btn-stop {
-      background: #e74c3c;
-      color: #fff;
-      border: 1px solid #be2d1d;
-    }
-    .btn-start:hover { background: #219150;}
-    .btn-stop:hover { background: #c0392b;}
-    /* Main content styles unchanged */
-    .btn-reset {
-      display: block;
-      width: 100%;
-      padding: 14px;
-      background: #e74c3c;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 1.1em;
-      margin: 25px 0;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .btn-reset:hover { background: #c0392b;}
-    .item {
-      display: flex;
-      align-items: center;
-      padding: 14px;
-      border: 1px solid #e0e0e0;
-      margin: 10px 0;
-      border-radius: 10px;
-      background: #f9f9f9;
-    }
-    body.dark .item { background: #2c3139; border-color: #41454b; }
-    .btn {
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; font-weight: bold; font-size: 20px; user-select: none;
-    }
-    .minus { background: #f5f5dc; color: #555;}
-    .plus { background: #d5f5d5; color: #27ae60;}
-    .title { flex-grow: 1; text-align: center;}
-    .count { font-size: 1.3em; font-weight: bold; color: #2c3e50;}
-    body.dark .count { color: #eceef1;}
-    .section-title {
-      font-weight: bold;
-      margin: 30px 0 12px 0;
-      color: #2c3e50;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 6px;
-      font-size: 1.2em;
-    }
-    body.dark .section-title { color: #eceef1; border-color: #444;}
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      font-size: 0.95em;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 10px 12px;
-      text-align: left;
-    }
-    th { background: #f5f7fa; color: #34495e; font-weight: 600;}
-    body.dark th { background: #343438; color: #e7eaee;}
-    tr:nth-child(even) { background: #fcfcfc;}
-    body.dark tr:nth-child(even) { background: #292c30;}
+    .layout { display:flex; max-width:1200px; margin:0 auto;}
+    .leftbar { width:270px; min-width:190px; background:#f9f9f9; border-right:1px solid #e1e1e1; padding:28px 18px 0 18px;}
+    .center-content { flex:1; padding:34px 24px 12px 24px;}
+    #mainTitle { text-align:center; font-size:2em; font-weight:700; margin-bottom:14px; }
+    #currentDate { text-align: center; font-size:1em; color:#888; margin-bottom:28px;}
+    .section-title { font-weight:bold; margin-top:32px; margin-bottom:9px; border-bottom:1px solid #eee; padding-bottom:6px; font-size:1.1em;}
+    .btn-reset { display:block; width:100%; max-width:480px; padding:13px; background:#e74c3c; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold; font-size:1em; margin:26px auto 9px auto;}
+    .btn-reset:hover {background:#c0392b;}
+    .item { display:flex; align-items:center; padding:13px; border:1px solid #eee; margin:8px 0; border-radius:10px; background:#fff; width:100%; max-width:500px;}
+    .btn { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:bold; font-size:19px;user-select:none;}
+    .minus { background:#fafad2; color:#555;}
+    .plus { background:#def5e5; color:#27ae60;}
+    .title { flex-grow:1; text-align:center;}
+    .count { font-size:1.13em; font-weight:bold; color:#242f3e;}
+    .history-title { font-weight:bold; margin:18px 0 8px 0; border-bottom:1px solid #eee; padding-bottom:3px; font-size:1.08em;}
+    table { width:100%; border-collapse:collapse; margin-top:8px; }
+    th,td { border:1px solid #ddd; padding:8px 10px; text-align:left;}
+    th { background:#f5f7fa; color:#34495e; font-weight:600;}
+    tr:nth-child(even){background:#fcfcfc;}
     .history-table td { font-family: monospace;}
-    @media (max-width: 900px) {
-      .layout { flex-direction: column;}
-      .rightbar { width:100%; padding:16px 8px;}
+    /* Lunch left */
+    .lunch-title { font-weight:bold; margin-bottom:8px; font-size:1.09em; text-align:left;}
+    .lunch-box { margin-bottom:26px;}
+    .lunch-item { display:flex; align-items:center; margin-bottom:14px;}
+    .timer-label { width:97px;}
+    .timer-display { font-family:monospace; min-width:88px; margin-left:7px;}
+    .timer-btn {
+      font-size:0.95em; margin-left:10px; padding:4px 13px; border-radius:6px; border:none; font-weight:bold;
+      cursor:pointer; transition:background 0.2s; min-width:48px;
+    }
+    .btn-start { background:#27ae60; color:#fff; border:1px solid #229b51; }
+    .btn-stop  { background:#e74c3c; color:#fff; border:1px solid #be2d1d; }
+    .btn-start:hover {background:#219150;}
+    .btn-stop:hover  {background:#c0392b;}
+    /* Dark */
+    body.dark { background:#23272d; color:#eceef1;}
+    body.dark .item   { background:#2c3139; border-color:#41454b;}
+    body.dark th      { background:#343438; color:#eceef1;}
+    body.dark tr:nth-child(even) { background:#292e34;}
+    body.dark .btn-reset {background:#a9312b;}
+    body.dark .plus, body.dark .minus { background:#353c46;}
+    body.dark .section-title, body.dark .history-title { color:#eceef1; border-color:#444;}
+    body.dark .lunch-box, body.dark .lunch-title { background:#23272d; color:#eceef1;}
+    body.dark .btn-start, body.dark .btn-stop { opacity:0.95;}
+    @media (max-width:800px) {
+      .layout {flex-direction:column;}
+      .center-content, .leftbar {padding:12px;}
+      .center-content .item, .btn-reset{max-width:100vw;}
     }
   </style>
   <!-- Firebase SDK (compat) -->
@@ -169,28 +67,9 @@
 <body>
 <button class="toggle-theme" onclick="toggleTheme()">🌚/🌞</button>
 <div class="layout">
-  <div class="content">
-    <div id="mainTitle">Мы тут работаем 🚀</div>
-    <div id="currentDate"></div>
-    <div id="listClaims"></div>
-    <div id="listBlocks"></div>
-    <button class="btn-reset" onclick="resetAll()">Обнулить всё</button>
-    <div class="section-title">📋 История изменений</div>
-    <table class="history-table">
-      <thead>
-        <tr>
-          <th>Дата и время</th>
-          <th>Тип</th>
-          <th>Имя</th>
-          <th>Изменение</th>
-        </tr>
-      </thead>
-      <tbody id="historyBody"></tbody>
-    </table>
-  </div>
-  <div class="rightbar">
-    <div class="timer-box">
-      <div class="timer-title">🍽️ Таймер обеда (60 мин)</div>
+  <div class="leftbar">
+    <div class="lunch-title">🍽️ Таймер обеда</div>
+    <div class="lunch-box">
       <div class="lunch-item">
         <span class="timer-label">Бочкарев</span>
         <span id="timer-bock" class="timer-display"></span>
@@ -211,6 +90,25 @@
       </div>
     </div>
   </div>
+  <div class="center-content">
+    <div id="mainTitle">Мы тут работаем 🚀</div>
+    <div id="currentDate"></div>
+    <div id="listClaims"></div>
+    <div id="listBlocks"></div>
+    <button class="btn-reset" onclick="resetAll()">Обнулить всё</button>
+    <div class="history-title">📋 История изменений</div>
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>Дата и время</th>
+          <th>Тип</th>
+          <th>Имя</th>
+          <th>Изменение</th>
+        </tr>
+      </thead>
+      <tbody id="historyBody"></tbody>
+    </table>
+  </div>
 </div>
 <script>
   // Тема
@@ -219,10 +117,9 @@
     localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : '');
   }
   if(localStorage.getItem('theme')==='dark') document.body.classList.add('dark');
-  // Дата
-  document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ru-RU', {
-    day: 'numeric', month: 'long', year: 'numeric'
-  });
+
+  document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+
   // Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyBb0uemCwfr3LpSjqCfbrPzgXMxqJo8ub0",
@@ -238,6 +135,7 @@
   const countersRef = db.ref('counters');
   const historyRef = db.ref('history');
   const lunchRef = db.ref('lunch');
+
   // Счётчики
   let data = [];
   countersRef.on('value', snapshot => {
@@ -315,12 +213,14 @@
     renderList(claims, 'listClaims');
     renderList(blocks, 'listBlocks');
   }
+
   // История
   historyRef.limitToLast(50).on('value', snapshot => {
     const val = snapshot.val();
     const history = val ? Object.values(val).reverse() : [];
     renderHistory(history);
   });
+
   function renderHistory(history) {
     const tbody = document.getElementById('historyBody');
     tbody.innerHTML = '';
@@ -340,7 +240,8 @@
       });
     }
   }
-  // Таймеры обеда (правый блок)
+
+  // Таймеры обеда (слева)
   lunchRef.on('value', snapshot => {
     window.lunchState = snapshot.val() || {};
     updateLunchTimers();
