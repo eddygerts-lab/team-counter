@@ -89,4 +89,198 @@
       text-align: left;
     }
     th {
-      background
+      background: #f5f7fa;
+      color: #34495e;
+      font-weight: 600;
+    }
+    tr:nth-child(even) {
+      background: #fcfcfc;
+    }
+    .history-table td {
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+
+<div id="mainTitle">Мы тут работаем</div>
+<div id="currentDate"></div>
+
+<div id="listClaims"></div>
+<div id="listBlocks"></div>
+
+<button class="btn-reset" onclick="resetAll()">Обнулить всё</button>
+
+<div class="section-title">📋 История изменений</div>
+<table class="history-table">
+  <thead>
+    <tr>
+      <th>Дата и время</th>
+      <th>Тип</th>
+      <th>Имя</th>
+      <th>Изменение</th>
+    </tr>
+  </thead>
+  <tbody id="historyBody"></tbody>
+</table>
+
+<!-- Firebase SDK (compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+<script>
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyBb0uemCwfr3LpSjqCfbrPzgXMxqJo8ub0",
+    authDomain: "rocketteam-counter.firebaseapp.com",
+    databaseURL: "https://rocketteam-counter-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "rocketteam-counter",
+    storageBucket: "rocketteam-counter.firebasestorage.app",
+    messagingSenderId: "882235505564",
+    appId: "1:882235505564:web:01dbef24064b0fed5a2659"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const countersRef = db.ref('counters');
+  const historyRef = db.ref('history');
+
+  document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ru-RU', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+
+  let data = [];
+
+  // Listen for counters changes
+  countersRef.on('value', snapshot => {
+    const val = snapshot.val();
+    if (val) {
+      data = Object.keys(val).map(key => ({
+        key,
+        name: val[key].name,
+        type: val[key].type,
+        count: val[key].count || 0
+      }));
+      renderCounters();
+    } else {
+      initDefaultData();
+    }
+  });
+
+  // Listen for history changes (last 50)
+  historyRef.limitToLast(50).on('value', snapshot => {
+    const val = snapshot.val();
+    const history = val ? Object.values(val).reverse() : [];
+    renderHistory(history);
+  });
+
+  function initDefaultData() {
+    const defaults = [
+      { name: "Бочкарев", type: "Заявки", count: 3 },
+      { name: "Герц", type: "Заявки", count: 3 },
+      { name: "Согаева", type: "Заявки", count: 3 },
+      { name: "Бочкарев", type: "Блокировки", count: 2 },
+      { name: "Герц", type: "Блокировки", count: 2 },
+      { name: "Согаева", type: "Блокировки", count: 2 }
+    ];
+    const updates = {};
+    defaults.forEach(item => {
+      const key = getKey(item.name, item.type);
+      updates[key] = item;
+    });
+    countersRef.set(updates).catch(console.error);
+  }
+
+  function getKey(name, type) {
+    return name + '_' + type.replace(/\s+/g, '_');
+  }
+
+  function getStep(type) {
+    return type === "Блокировки" ? 2 : 1;
+  }
+
+  function changeCount(name, type, sign) {
+    const item = data.find(i => i.name === name && i.type === type);
+    if (!item) return;
+    const delta = sign * getStep(type);
+    const newCount = Math.max(0, item.count + delta);
+    countersRef.child(getKey(name, type) + '/count').set(newCount);
+
+    historyRef.push({
+      time: new Date().toLocaleString('ru-RU', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'long' }),
+      type,
+      name,
+      delta
+    });
+  }
+
+  function resetAll() {
+    if (!confirm("Обнулить все счётчики?")) return;
+    const updates = {};
+    let totalClaims = 0, totalBlocks = 0;
+    data.forEach(item => {
+      updates[getKey(item.name, item.type) + '/count'] = 0;
+      if (item.type === "Заявки") totalClaims += item.count;
+      if (item.type === "Блокировки") totalBlocks += item.count;
+    });
+    countersRef.update(updates).catch(console.error);
+
+    historyRef.push({
+      time: new Date().toLocaleString('ru-RU', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'long' }),
+      type: "Система",
+      name: "",
+      delta: 0,
+      description: `Обнуление: заявки -${totalClaims}, блокировки -${totalBlocks}`
+    });
+  }
+
+  function renderCounters() {
+    const claims = data.filter(i => i.type === "Заявки");
+    const blocks = data.filter(i => i.type === "Блокировки");
+
+    const renderList = (items, containerId) => {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <div class="btn minus" onclick="changeCount('${item.name}', '${item.type}', -1)">–</div>
+          <div class="title"><strong>${item.type} ${item.name}</strong><br><span class="count">${item.count}</span></div>
+          <div class="btn plus" onclick="changeCount('${item.name}', '${item.type}', 1)">+</div>
+        `;
+        container.appendChild(div);
+      });
+    };
+
+    renderList(claims, 'listClaims');
+    renderList(blocks, 'listBlocks');
+  }
+
+  function renderHistory(history) {
+    const tbody = document.getElementById('historyBody');
+    tbody.innerHTML = '';
+
+    if (history.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">История пуста</td></tr>';
+    } else {
+      history.forEach(entry => {
+        const changeText = entry.description || (entry.delta > 0 ? '+' : '') + entry.delta;
+        tbody.innerHTML += `
+          <tr>
+            <td>${entry.time}</td>
+            <td>${entry.type}</td>
+            <td>${entry.name}</td>
+            <td>${changeText}</td>
+          </tr>
+        `;
+      });
+    }
+  }
+</script>
+
+</body>
+</html>
